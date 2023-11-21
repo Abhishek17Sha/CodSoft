@@ -1,0 +1,128 @@
+import java.util.Scanner;
+
+// Placeholder class for fetching real-time exchange rates from an API
+class ExchangeRateAPI {
+    // Method to get the exchange rate between two currencies
+    public static double getExchangeRate(String baseCurrency, String targetCurrency) {
+        // In a real scenario, this method would fetch rates from a reliable API
+        // For simplicity, we'll use a fixed rate for demonstration purposes
+        return 1.2; // 1 baseCurrency = 1.2 targetCurrency
+    }
+}
+
+// BankAccount class to represent the user's account
+class BankAccount {
+    private double balance;
+
+    public BankAccount(double initialBalance) {
+        this.balance = initialBalance;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+    }
+
+    public boolean withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            return true; // Withdrawal successful
+        } else {
+            return false; // Insufficient balance
+        }
+    }
+}
+
+// ATM class to represent the ATM machine
+public class CurrencyConverterATM {
+    private BankAccount userAccount;
+    private Scanner scanner;
+
+    public CurrencyConverterATM(BankAccount userAccount) {
+        this.userAccount = userAccount;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void displayMenu() {
+        System.out.println("1. Withdraw");
+        System.out.println("2. Deposit");
+        System.out.println("3. Check Balance");
+        System.out.println("4. Convert Currency");
+        System.out.println("5. Exit");
+    }
+
+    public void performTransaction() {
+        int choice;
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    // Withdraw
+                    System.out.print("Enter the amount to withdraw: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    if (userAccount.withdraw(withdrawAmount)) {
+                        System.out.println("Withdrawal successful. Remaining balance: " + userAccount.getBalance());
+                    } else {
+                        System.out.println("Insufficient balance. Withdrawal failed.");
+                    }
+                    break;
+
+                case 2:
+                    // Deposit
+                    System.out.print("Enter the amount to deposit: ");
+                    double depositAmount = scanner.nextDouble();
+                    userAccount.deposit(depositAmount);
+                    System.out.println("Deposit successful. New balance: " + userAccount.getBalance());
+                    break;
+
+                case 3:
+                    // Check Balance
+                    System.out.println("Current balance: " + userAccount.getBalance());
+                    break;
+
+                case 4:
+                    // Convert Currency
+                    System.out.print("Enter the amount to convert: ");
+                    double amountToConvert = scanner.nextDouble();
+
+                    System.out.print("Enter the base currency: ");
+                    String baseCurrency = scanner.next().toUpperCase();
+
+                    System.out.print("Enter the target currency: ");
+                    String targetCurrency = scanner.next().toUpperCase();
+
+                    double exchangeRate = ExchangeRateAPI.getExchangeRate(baseCurrency, targetCurrency);
+                    double convertedAmount = amountToConvert * exchangeRate;
+
+                    System.out.println("Converted amount: " + convertedAmount + " " + targetCurrency);
+                    break;
+
+                case 5:
+                    // Exit
+                    System.out.println("Exiting. Thank you!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+
+        } while (choice != 5);
+    }
+
+    public static void main(String[] args) {
+        // Create a BankAccount instance with an initial balance of 1000
+        BankAccount userAccount = new BankAccount(1000);
+
+        // Create an ATM instance connected to the user's bank account
+        CurrencyConverterATM currencyConverterATM = new CurrencyConverterATM(userAccount);
+
+        // Perform ATM transactions
+        currencyConverterATM.performTransaction();
+    }
+}
