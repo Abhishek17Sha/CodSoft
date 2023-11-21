@@ -1,0 +1,195 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+
+class Student {
+    private String name;
+    private int rollNumber;
+    private String grade;
+
+    public Student(String name, int rollNumber, String grade) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.grade = grade;
+    }
+
+    // Getters and setters
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(int rollNumber) {
+        this.rollNumber = rollNumber;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", rollNumber=" + rollNumber +
+                ", grade='" + grade + '\'' +
+                '}';
+    }
+}
+
+class StudentManagementSystem {
+    private List<Student> students;
+    private Scanner scanner;
+
+    public StudentManagementSystem() {
+        this.students = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void displayMenu() {
+        System.out.println("1. Add a new student");
+        System.out.println("2. Remove a student");
+        System.out.println("3. Search for a student");
+        System.out.println("4. Display all students");
+        System.out.println("5. Exit");
+    }
+
+    public void addStudent() {
+        System.out.println("Enter student details:");
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+
+        int rollNumber;
+        while (true) {
+            try {
+                System.out.print("Roll Number: ");
+                rollNumber = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Roll Number must be an integer.");
+            }
+        }
+
+        System.out.print("Grade: ");
+        String grade = scanner.nextLine();
+
+        Student newStudent = new Student(name, rollNumber, grade);
+        students.add(newStudent);
+        System.out.println("Student added successfully.");
+    }
+
+    public void removeStudent() {
+        System.out.print("Enter the Roll Number of the student to remove: ");
+        int rollNumberToRemove;
+        while (true) {
+            try {
+                rollNumberToRemove = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Roll Number must be an integer.");
+            }
+        }
+
+        Iterator<Student> iterator = students.iterator();
+        while (iterator.hasNext()) {
+            Student student = iterator.next();
+            if (student.getRollNumber() == rollNumberToRemove) {
+                iterator.remove();
+                System.out.println("Student removed successfully.");
+                return;
+            }
+        }
+
+        System.out.println("Student with Roll Number " + rollNumberToRemove + " not found.");
+    }
+
+    public void searchStudent() {
+        System.out.print("Enter the Roll Number of the student to search: ");
+        int rollNumberToSearch;
+        while (true) {
+            try {
+                rollNumberToSearch = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Roll Number must be an integer.");
+            }
+        }
+
+        for (Student student : students) {
+            if (student.getRollNumber() == rollNumberToSearch) {
+                System.out.println("Student found:\n" + student);
+                return;
+            }
+        }
+
+        System.out.println("Student with Roll Number " + rollNumberToSearch + " not found.");
+    }
+
+    public void displayAllStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+        } else {
+            System.out.println("List of all students:");
+            for (Student student : students) {
+                System.out.println(student);
+            }
+        }
+    }
+
+    public void run() {
+        int choice;
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            while (true) {
+                try {
+                    choice = Integer.parseInt(scanner.nextLine());
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                }
+            }
+
+            switch (choice) {
+                case 1:
+                    addStudent();
+                    break;
+                case 2:
+                    removeStudent();
+                    break;
+                case 3:
+                    searchStudent();
+                    break;
+                case 4:
+                    displayAllStudents();
+                    break;
+                case 5:
+                    System.out.println("Exiting. Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+
+        } while (choice != 5);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        StudentManagementSystem sms = new StudentManagementSystem();
+        sms.run();
+    }
+}
